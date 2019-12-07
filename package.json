@@ -1,5 +1,5 @@
 {
-  "name": "FancyQueryString",
+  "name": "fancy-query-string",
   "version": "0.0.0",
   "repository": "https://github.com/Clechay/FancyQueryString",  
   "description": "Human-friendly query language specification and parser",
