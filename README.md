@@ -33,7 +33,7 @@ Input
 
 Output
 
-```JSON
+```js
 {
   list: [
     { id: 'brand', rel: '=', val: 'abc' },
