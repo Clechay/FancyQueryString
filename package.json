@@ -1,0 +1,14 @@
+{
+  "name": "FancyQueryString",
+  "version": "0.0.0",
+  "repository": "https://github.com/Clechay/FancyQueryString",  
+  "description": "Human-friendly query language specification and parser",
+  "main": "./dist/fancy-query-string.js",
+  "author": "Łukasz Kleczaj (luke.clechay@gmail.com)",
+  "license": "MIT",
+  "private": false,
+  "scripts": {
+    "build":"tsc",
+    "clear":"rm -r ./dist && mkdir ./dist"
+  }
+}

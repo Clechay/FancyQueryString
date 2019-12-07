@@ -1,0 +1,75 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const config_1 = require("./config");
+function pulloutValue(tokens, str) {
+    if (!str.length)
+        throw "Cannot pullout value from empty string";
+    if (config_1.charsets.value_wrapper.includes(str[0])) {
+        const raw = str.split(str[0])[1];
+        tokens.push({ type: "value-wraped", raw });
+        return str.slice(raw.length + 2);
+    }
+    const raw = str.split(config_1.charsets.separator)[0];
+    tokens.push({ type: "value-naked", raw });
+    return str.slice(raw.length);
+}
+function pulloutId(tokens, str) {
+    if (!str.length)
+        throw "Cannot pullout id from empty string";
+    let acc = "";
+    while (!config_1.charsets.relation.includes(str[0])) {
+        acc += str[0];
+        str = str.slice(1);
+    }
+    tokens.push({ type: "id", raw: acc });
+    return str;
+}
+function pulloutRelation(tokens, str) {
+    if (!str.length)
+        throw "Cannot pullout relation from empty string";
+    let rel = config_1.relations.codes.filter(r => str.startsWith(r))[0];
+    tokens.push({
+        type: "relation",
+        raw: rel
+    });
+    return str.slice(rel.length);
+}
+function pulloutSeparator(tokens, str) {
+    if (!str.length)
+        throw "Cannot pullout id from empty string";
+    const token = {
+        type: "separator",
+        raw: ""
+    };
+    while (config_1.charsets.separator === str[0]) {
+        token.raw += str[0];
+        str = str.slice(1);
+    }
+    tokens.push(token);
+    return str;
+}
+const pulloutToken = (tokens, str) => {
+    const last = tokens.length ? tokens[tokens.length - 1] : null;
+    if (last === null)
+        return pulloutId(tokens, str);
+    if (last.type === "id")
+        return pulloutRelation(tokens, str);
+    if (last.type === "relation")
+        return pulloutValue(tokens, str);
+    if (last.type === "value-naked" || last.type === "value-wraped") {
+        if (config_1.charsets.separator === str[0])
+            return pulloutSeparator(tokens, str);
+        else
+            throw 'illegeal token or no token at all';
+    }
+    if (last.type === "separator")
+        return pulloutId(tokens, str);
+    throw "internal error";
+};
+exports.rawTokenize = (text) => {
+    const tokens = [];
+    while (text.length)
+        text = pulloutToken(tokens, text);
+    return tokens;
+};
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoicHJvY2Vzc1RleHQuanMiLCJzb3VyY2VSb290IjoiIiwic291cmNlcyI6WyIuLi9zcmMvcHJvY2Vzc1RleHQudHMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6Ijs7QUFBQSxxQ0FBNEM7QUFHNUMsU0FBUyxZQUFZLENBQUMsTUFBaUIsRUFBRSxHQUFVO0lBQ2xELElBQUcsQ0FBQyxHQUFHLENBQUMsTUFBTTtRQUFFLE1BQU0sd0NBQXdDLENBQUM7SUFDL0QsSUFBRyxpQkFBUSxDQUFDLGFBQWEsQ0FBQyxRQUFRLENBQUUsR0FBRyxDQUFDLENBQUMsQ0FBQyxDQUFFLEVBQUM7UUFDNUMsTUFBTSxHQUFHLEdBQUcsR0FBRyxDQUFDLEtBQUssQ0FBQyxHQUFHLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDLENBQUMsQ0FBQztRQUNqQyxNQUFNLENBQUMsSUFBSSxDQUFDLEVBQUMsSUFBSSxFQUFDLGNBQWMsRUFBQyxHQUFHLEVBQUMsQ0FBQyxDQUFDO1FBQ3ZDLE9BQU8sR0FBRyxDQUFDLEtBQUssQ0FBQyxHQUFHLENBQUMsTUFBTSxHQUFHLENBQUMsQ0FBQyxDQUFDO0tBQ2pDO0lBQ0QsTUFBTSxHQUFHLEdBQUcsR0FBRyxDQUFDLEtBQUssQ0FBQyxpQkFBUSxDQUFDLFNBQVMsQ0FBQyxDQUFDLENBQUMsQ0FBQyxDQUFDO0lBQzdDLE1BQU0sQ0FBQyxJQUFJLENBQUMsRUFBQyxJQUFJLEVBQUMsYUFBYSxFQUFDLEdBQUcsRUFBQyxDQUFDLENBQUM7SUFDdEMsT0FBTyxHQUFHLENBQUMsS0FBSyxDQUFDLEdBQUcsQ0FBQyxNQUFNLENBQUMsQ0FBQztBQUM5QixDQUFDO0FBRUQsU0FBUyxTQUFTLENBQUMsTUFBaUIsRUFBRSxHQUFVO0lBQy9DLElBQUcsQ0FBQyxHQUFHLENBQUMsTUFBTTtRQUFFLE1BQU0scUNBQXFDLENBQUM7SUFDNUQsSUFBSSxHQUFHLEdBQUcsRUFBRSxDQUFDO0lBQ2IsT0FBTyxDQUFDLGlCQUFRLENBQUMsUUFBUSxDQUFDLFFBQVEsQ0FB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
